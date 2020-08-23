@@ -1,0 +1,107 @@
+﻿<Window x:Class="SatisfactoryOverlay.Views.MainWindowView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:SatisfactoryOverlay.ViewModels"
+        xmlns:mvvm="clr-namespace:mvvmlib;assembly=mvvmlib"
+        xmlns:local="clr-namespace:SatisfactoryOverlay" 
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance {x:Type vm:MainWindowViewModel}}"
+        Title="Satisfactory Overlay Manager" Height="420" Width="400" ResizeMode="CanMinimize">
+
+    <Window.Resources>
+        <vm:MainWindowViewModel x:Key="ViewModel"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
+    </Window.Resources>
+
+    <Window.DataContext>
+        <StaticResource ResourceKey="ViewModel"/>
+    </Window.DataContext>
+
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <StackPanel  Orientation="Vertical" Margin="8">
+                <GroupBox Header="Satisfactory" Padding="4">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding Path=ResData.Label_SessionSelect}"/>
+                        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Path=Sessions}" SelectedItem="{Binding Path=MonitoredSession}"/>
+
+                        <GroupBox Header="{Binding Path=ResData.Header_DisplayedInfo}" Padding="0 4 0 0">
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox Margin="0 0 0 0" IsChecked="{Binding Path=SessionNameVisible}">
+                                    <TextBlock Text="{Binding Path=ResData.CheckBox_SessionName}"/>
+                                </CheckBox>
+                                <CheckBox IsChecked="{Binding Path=PlaytimeVisible}">
+                                    <TextBlock Text="{Binding Path=ResData.CheckBox_Playtime}"/>
+                                </CheckBox>
+                                <CheckBox IsChecked="{Binding Path=StartingZoneVisible}">
+                                    <TextBlock Text="{Binding Path=ResData.CheckBox_StartingArea}"/>
+                                </CheckBox>
+                                <CheckBox IsChecked="{Binding Path=ModsVisible}">
+                                    <TextBlock Text="{Binding Path=ResData.CheckBox_Modlist}"/>
+                                </CheckBox>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="OBS" Padding="4">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding Path=ResData.Label_ObsElement}"/>
+                        <TextBox VerticalAlignment="Center" Padding="2" Text="{Binding Path=ObsElementName}"/>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="4*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=ResData.Label_ObsIp}" Margin="0 4 0 0"/>
+                                <TextBlock Text="{Binding Path=ResData.Label_ObsIpHint, StringFormat={}({0})}" Margin="4 4 0 0" Foreground="Gray" FontStyle="Italic"/>
+                            </StackPanel>
+                            <TextBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Padding="2" Margin="0 0 4 0" Text="{Binding Path=ObsIpAddress}"/>
+
+                            <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" Text="{Binding Path=ResData.Label_ObsPort}"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Padding="2" Text="{Binding Path=ObsPort}"/>
+                        </Grid>
+
+                        <TextBlock Text="{Binding Path=ResData.Label_WebsocketPassword}" Margin="0 4 0 0"/>
+                        <PasswordBox VerticalAlignment="Center" Padding="2" PasswordChar="*"
+                                 mvvm:PasswordBoxAssistant.BindPassword="True"
+                                 mvvm:PasswordBoxAssistant.BoundPassword="{Binding Path=WebsocketPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <Button Grid.Row="2" Grid.Column="1" Content="{Binding Path=ResData.Button_Connect}" Margin="0 4 0 0" Padding="8 2" HorizontalAlignment="Right" Command="{Binding Path=CmdConnectOBS}"/>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+
+            <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Visibility="{Binding Path=HasUpdate, Converter={StaticResource BoolToVisConverter}}">
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <TextBlock FontWeight="Bold" Padding="8 4" HorizontalAlignment="Center">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} {1} {2}">
+                                <Binding Path="ResData.Word_Version"/>
+                                <Binding Path="Release.Version"/>
+                                <Binding Path="ResData.Word_Available"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock Text="{Binding Path=ResData.Message_UpdateAvailable}" Padding="8 4" HorizontalAlignment="Center"/>
+                    <Button Content="{Binding Path=ResData.Button_OpenUpdate}" Margin="4" Padding="8 2" HorizontalAlignment="Center" Command="{Binding Path=CmdOpenUpdate}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <StatusBar DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding Path=OBSInfo}"/>
+            </StatusBarItem>
+        </StatusBar>
+    </DockPanel>
+
+</Window>

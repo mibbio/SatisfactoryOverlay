@@ -1,0 +1,3 @@
+[submodule "OBS.WebSocket.NET"]
+	path = OBS.WebSocket.NET
+	url = https://github.com/mibbio/OBS.WebSocket.NET.git

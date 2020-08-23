@@ -1,0 +1,24 @@
+Project	File	Key	Comment		Comment.de	.de
+SatisfactoryOverlay	Properties\Resources	Button_Connect		Connect		Verbinden
+SatisfactoryOverlay	Properties\Resources	CheckBox_Modlist		Mods		Mods
+SatisfactoryOverlay	Properties\Resources	CheckBox_Playtime		Playtime		Spielzeit
+SatisfactoryOverlay	Properties\Resources	CheckBox_SessionName		Session name		Sitzungsname
+SatisfactoryOverlay	Properties\Resources	CheckBox_StartingArea		Starting area		Startgebiet
+SatisfactoryOverlay	Properties\Resources	Header_DisplayedInfo		Displayed Info		Angezeigte Info
+SatisfactoryOverlay	Properties\Resources	Label_CloseApplication		Close		Beenden
+SatisfactoryOverlay	Properties\Resources	Label_Locale		Language		Sprache
+SatisfactoryOverlay	Properties\Resources	Label_LocaleDE		German		Deutsch
+SatisfactoryOverlay	Properties\Resources	Label_LocaleEN		English		Englisch
+SatisfactoryOverlay	Properties\Resources	Label_ObsElement		Name of 'Text (GDI+)' source in OBS		Name der 'Text (GDI+)' Quelle in OBS
+SatisfactoryOverlay	Properties\Resources	Label_ObsIp		IP of PC running OBS		IP des PCs mit OBS
+SatisfactoryOverlay	Properties\Resources	Label_ObsIpHint		127.0.0.1 for local PC		127.0.0.1 für lokalen PC
+SatisfactoryOverlay	Properties\Resources	Label_ObsPort		Port		Port
+SatisfactoryOverlay	Properties\Resources	Label_SessionSelect		Session / Savegame		Sitzung / Spielstand
+SatisfactoryOverlay	Properties\Resources	Label_ShowSettings		Show settings		Einstellungen
+SatisfactoryOverlay	Properties\Resources	Label_WebsocketPassword		Websocket password		Websocket Passwort
+SatisfactoryOverlay	Properties\Resources	Message_CanNotConnect		can not connect to OBS		kann nicht mit OBS verbinden
+SatisfactoryOverlay	Properties\Resources	Message_Connected		connected		verbunden
+SatisfactoryOverlay	Properties\Resources	Message_Disconnected		not connected		nicht verbunden
+SatisfactoryOverlay	Properties\Resources	Message_SavegameError		Satisfactory savegame folder does not exist or contains no savegames. Application will close now.		Der Spielstand-Ordner von Satisfactory existiert nicht oder enthält keine Spielstände. Die Anwendung wird jetzt beenden.
+SatisfactoryOverlay	Properties\Resources	Message_SavegameErrorTitle		No savegames found		Keine Spielstände gefunden
+SatisfactoryOverlay	Properties\Resources	Message_WrongPassword		wrong websocket password		falsches Websocket Passwort
