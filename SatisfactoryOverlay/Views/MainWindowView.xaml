@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:SatisfactoryOverlay" 
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance {x:Type vm:MainWindowViewModel}}"
-        Title="Satisfactory Overlay Manager" Height="420" Width="400" ResizeMode="CanMinimize">
+        Title="Satisfactory Overlay Manager" Height="440" Width="400" ResizeMode="CanMinimize">
 
     <Window.Resources>
         <vm:MainWindowViewModel x:Key="ViewModel"/>
@@ -35,12 +35,16 @@
                                 <CheckBox IsChecked="{Binding Path=PlaytimeVisible}">
                                     <TextBlock Text="{Binding Path=ResData.CheckBox_Playtime}"/>
                                 </CheckBox>
+                                <CheckBox IsChecked="{Binding Path=TotalPlaytimeVisible}">
+                                    <TextBlock Text="{Binding Path=ResData.CheckBox_TotalPlaytime}"/>
+                                </CheckBox>
                                 <CheckBox IsChecked="{Binding Path=StartingZoneVisible}">
                                     <TextBlock Text="{Binding Path=ResData.CheckBox_StartingArea}"/>
                                 </CheckBox>
                                 <CheckBox IsChecked="{Binding Path=ModsVisible}">
                                     <TextBlock Text="{Binding Path=ResData.CheckBox_Modlist}"/>
                                 </CheckBox>
+                                
                             </StackPanel>
                         </GroupBox>
                     </StackPanel>

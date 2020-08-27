@@ -1,5 +1,6 @@
 ﻿namespace SatisfactoryOverlay.Models
 {
+
     using OBS.WebSocket.NET;
 
     using SatisfactoryOverlay.EventArgs;
@@ -7,6 +8,7 @@
     using SatisfactoryOverlay.Savegame;
 
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.IO;
     using System.Linq;
@@ -21,13 +23,15 @@
 
         private SavegameHeader activeSavegame;
 
+        private TimeSpan totalPlaytime;
+
         public string MonitoredSession
         {
             get => settings.LastSessionName;
             set
             {
                 settings.LastSessionName = value;
-                UpdateSavegame();
+                UpdateSavegameData();
                 settings.Save();
             }
         }
@@ -51,6 +55,18 @@
             {
                 if (settings.PlaytimeVisivble == value) return;
                 settings.PlaytimeVisivble = value;
+                settings.Save();
+                UpdateOBS();
+            }
+        }
+
+        public bool TotalPlaytimeVisible
+        {
+            get => settings.TotalPlaytimeVisible;
+            set
+            {
+                if (settings.TotalPlaytimeVisible == value) return;
+                settings.TotalPlaytimeVisible = value;
                 settings.Save();
                 UpdateOBS();
             }
@@ -147,7 +163,7 @@
 
             settings = SettingsModel.PopulateSettings();
 
-            UpdateSavegame();
+            UpdateSavegameData();
         }
 
         private void OnSavefileWatcherEvent(object sender, FileSystemEventArgs e)
@@ -175,9 +191,11 @@
             }
         }
 
-        private void UpdateSavegame()
+        private void UpdateSavegameData()
         {
-            activeSavegame = GetLatestSaveForSession(MonitoredSession);
+            var savegames = GetLatestSavegames();
+            activeSavegame = savegames.Where(header => header.SessionName == MonitoredSession).FirstOrDefault();
+            totalPlaytime = savegames.Aggregate(TimeSpan.Zero, (result, header) => result += header.PlayTime);
             UpdateOBS();
         }
 
@@ -197,6 +215,10 @@
                     else
                     {
                         props.Text = string.Empty;
+                        if (settings.TotalPlaytimeVisible)
+                        {
+                            props.Text += $"{Resources.Label_TotalPlaytime}: {totalPlaytime.TotalHours:F0}h {totalPlaytime.Minutes:D2}m {totalPlaytime.Seconds:D2}s\n";
+                        }
                         if (settings.SessionNameVisible)
                             props.Text += $"{Resources.CheckBox_SessionName}: {header.SessionName}\n";
 
@@ -204,7 +226,7 @@
                             props.Text += $"{Resources.CheckBox_StartingArea}: {header.StartLocation}\n";
 
                         if (settings.PlaytimeVisivble)
-                            props.Text += $"{Resources.CheckBox_Playtime}: {header.PlayTime.TotalHours:F0}h {header.PlayTime.Minutes:D2}m {header.PlayTime.Seconds:D2}s\n";
+                            props.Text += $"{Resources.Label_Playtime}: {header.PlayTime.TotalHours:F0}h {header.PlayTime.Minutes:D2}m {header.PlayTime.Seconds:D2}s\n";
 
                         if (settings.ModsVisible)
                         {
@@ -223,12 +245,12 @@
             }
         }
 
-        private SavegameHeader GetLatestSaveForSession(string sessionName)
+        private IEnumerable<SavegameHeader> GetLatestSavegames()
         {
-            return Directory.EnumerateFiles(App.SavegameFolder)
-                .Select(file => SavegameHeader.Read(file))
-                .Where(header => header.SessionName == sessionName)
-                .OrderByDescending(header => header.SaveDate).FirstOrDefault();
+            return from file in Directory.EnumerateFiles(App.SavegameFolder)
+                   select SavegameHeader.Read(file) into header
+                   group header by header.SessionName into session
+                   select session.OrderByDescending(sh => sh.SaveDate).First();
         }
 
         public event EventHandler<ConnectionEventArg> OBSInfoChanged;

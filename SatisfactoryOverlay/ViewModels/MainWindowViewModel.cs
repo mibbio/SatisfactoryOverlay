@@ -46,6 +46,12 @@
             set => monitor.PlaytimeVisible = (bool)value;
         }
 
+        public bool? TotalPlaytimeVisible
+        {
+            get => monitor?.TotalPlaytimeVisible;
+            set => monitor.TotalPlaytimeVisible = (bool)value;
+        }
+
         public bool? StartingZoneVisible
         {
             get => monitor?.StartingZoneVisible;

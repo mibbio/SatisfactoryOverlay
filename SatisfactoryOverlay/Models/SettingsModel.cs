@@ -30,6 +30,10 @@
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool ModsVisible { get; set; }
 
+        [DefaultValue(false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public bool TotalPlaytimeVisible { get; set; }
+
         [DefaultValue("satisfactoryInfo")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string ObsElementName { get; set; }
