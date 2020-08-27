@@ -98,7 +98,7 @@ namespace SatisfactoryOverlay.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Playtime.
+        ///   Looks up a localized string similar to Playtime (selected save).
         /// </summary>
         public static string CheckBox_Playtime {
             get {
@@ -121,6 +121,15 @@ namespace SatisfactoryOverlay.Properties {
         public static string CheckBox_StartingArea {
             get {
                 return ResourceManager.GetString("CheckBox_StartingArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playtime (total).
+        /// </summary>
+        public static string CheckBox_TotalPlaytime {
+            get {
+                return ResourceManager.GetString("CheckBox_TotalPlaytime", resourceCulture);
             }
         }
         
@@ -236,6 +245,15 @@ namespace SatisfactoryOverlay.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Playtime.
+        /// </summary>
+        public static string Label_Playtime {
+            get {
+                return ResourceManager.GetString("Label_Playtime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Session / Savegame.
         /// </summary>
         public static string Label_SessionSelect {
@@ -250,6 +268,15 @@ namespace SatisfactoryOverlay.Properties {
         public static string Label_ShowSettings {
             get {
                 return ResourceManager.GetString("Label_ShowSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total playtime.
+        /// </summary>
+        public static string Label_TotalPlaytime {
+            get {
+                return ResourceManager.GetString("Label_TotalPlaytime", resourceCulture);
             }
         }
         

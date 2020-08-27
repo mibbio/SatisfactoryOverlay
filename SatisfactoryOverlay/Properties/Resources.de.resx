@@ -124,7 +124,7 @@
     <value>Mods</value>
   </data>
   <data name="CheckBox_Playtime" xml:space="preserve">
-    <value>Spielzeit</value>
+    <value>Spielzeit (gewählter Spielstand)</value>
   </data>
   <data name="CheckBox_SessionName" xml:space="preserve">
     <value>Sitzungsname</value>
@@ -197,5 +197,14 @@
   </data>
   <data name="Word_Version" xml:space="preserve">
     <value>Version</value>
+  </data>
+  <data name="CheckBox_TotalPlaytime" xml:space="preserve">
+    <value>Spielzeit (gesamt)</value>
+  </data>
+  <data name="Label_Playtime" xml:space="preserve">
+    <value>Spielzeit</value>
+  </data>
+  <data name="Label_TotalPlaytime" xml:space="preserve">
+    <value>Gesamte Spielzeit</value>
   </data>
 </root>
