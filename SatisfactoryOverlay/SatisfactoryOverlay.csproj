@@ -72,6 +72,8 @@
     <Compile Include="Helper.cs" />
     <Compile Include="Models\MonitoringModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
+    <Compile Include="Obs\IObsClient.cs" />
+    <Compile Include="Obs\ObsWebsocketClient.cs" />
     <Compile Include="Savegame\SavefileStreamExtensions.cs" />
     <Compile Include="Savegame\SavegameHeader.cs" />
     <Compile Include="Updater\IUpdateNotifier.cs" />
