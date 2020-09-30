@@ -147,7 +147,7 @@
             };
 
             List<SavegameHeader> savegames = new List<SavegameHeader>();
-            foreach (var file in Directory.EnumerateFiles(App.SavegameFolder))
+            foreach (var file in Directory.EnumerateFiles(App.SavegameFolder, "*.sav"))
             {
                 savegames.Add(SavegameHeader.Read(file));
             }

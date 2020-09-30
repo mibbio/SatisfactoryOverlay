@@ -247,7 +247,7 @@
 
         private IEnumerable<SavegameHeader> GetLatestSavegames()
         {
-            return from file in Directory.EnumerateFiles(App.SavegameFolder)
+            return from file in Directory.EnumerateFiles(App.SavegameFolder, "*.sav")
                    select SavegameHeader.Read(file) into header
                    group header by header.SessionName into session
                    select session.OrderByDescending(sh => sh.SaveDate).First();
