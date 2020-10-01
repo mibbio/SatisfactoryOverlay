@@ -3,6 +3,7 @@
     using Newtonsoft.Json.Linq;
 
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Sockets;
@@ -17,9 +18,9 @@
         private const int SendChunkSize = 1024;
 
         private readonly ClientWebSocket _cws;
-        private readonly TimeSpan _connectionTimeout = TimeSpan.FromSeconds(30);
 
-        protected readonly Dictionary<string, TaskCompletionSource<JObject>> _pendingRequests;
+        protected readonly TimeSpan _connectionTimeout = TimeSpan.FromSeconds(30);
+        protected readonly ConcurrentDictionary<string, TaskCompletionSource<JObject>> _pendingRequests;
 
         protected Uri _uri;
 
@@ -47,16 +48,24 @@
 
             _cws = new ClientWebSocket();
             _cws.Options.KeepAliveInterval = TimeSpan.FromSeconds(30);
-            _pendingRequests = new Dictionary<string, TaskCompletionSource<JObject>>();
+            _pendingRequests = new ConcurrentDictionary<string, TaskCompletionSource<JObject>>();
         }
 
         public virtual async Task ConnectAsync()
         {
-            await _cws.ConnectAsync(_uri, new CancellationTokenSource(_connectionTimeout).Token);
+            try
+            {
+                await _cws.ConnectAsync(_uri, new CancellationTokenSource(_connectionTimeout).Token);
+            }
+            catch (WebSocketException)
+            {
+                InvokeErrorEvent(ObsClientErrorType.ConnectFailure);
+            }
+
             if (_cws.State == WebSocketState.Open)
             {
                 var listenerTask = Task.Run(StartListening);
-                OnConnected?.Invoke(this, EventArgs.Empty);
+                InvokeConnectedEvent();
             }
         }
 
@@ -69,17 +78,14 @@
                     await _cws.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
                 }
             }
-            catch (Exception)
-            {
-                Helper.DebugBreak();
-            }
+            catch (Exception) { }
             finally
             {
                 foreach (var request in _pendingRequests)
                 {
                     request.Value.TrySetCanceled();
                 }
-                OnDisconnected?.Invoke(this, EventArgs.Empty);
+                InvokeisconnectedEvent();
             }
         }
 
@@ -160,36 +166,40 @@
                         }
                     } while (!result.EndOfMessage);
 
+                    Console.WriteLine(stringResult.ToString());
                     var body = JObject.Parse(stringResult.ToString());
                     var messageId = FindMessageId(body);
-                    var handler = _pendingRequests[messageId];
 
-                    if (handler != null)
+                    if (!string.IsNullOrWhiteSpace(messageId))
                     {
-                        handler.TrySetResult(body);
-                        lock (_pendingRequests)
+                        if (_pendingRequests.TryRemove(messageId, out TaskCompletionSource<JObject> tcs))
                         {
-                            _pendingRequests.Remove(messageId);
+                            tcs.TrySetResult(body);
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     if (_cws.State != WebSocketState.Open)
                     {
-
+                        InvokeisconnectedEvent();
                     }
                     //TODO handle different exceptions
                     // WebSocketException, AggregateException (TaskCancelled), JsonReaderException
-                    Helper.DebugBreak();
                 }
             }
         }
+
+        protected virtual void InvokeConnectedEvent() => OnConnected?.Invoke(this, EventArgs.Empty);
+
+        protected virtual void InvokeisconnectedEvent() => OnDisconnected?.Invoke(this, EventArgs.Empty);
+
+        protected virtual void InvokeErrorEvent(ObsClientErrorType errorType) => OnClientError?.Invoke(this, errorType);
 
         public event EventHandler OnConnected;
 
         public event EventHandler OnDisconnected;
 
-        public event EventHandler<Exception> OnClientError;
+        public event EventHandler<ObsClientErrorType> OnClientError;
     }
 }
