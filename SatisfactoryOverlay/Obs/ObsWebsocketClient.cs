@@ -4,7 +4,6 @@
 
     using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Net;
     using System.Net.Sockets;
     using System.Net.WebSockets;
@@ -25,6 +24,8 @@
         protected Uri _uri;
 
         public bool IsConnected => _cws.State == WebSocketState.Open;
+
+        public abstract bool NeedsAuthentication { get; }
 
         public ObsWebsocketClient(IPAddress address, ushort port)
         {
@@ -65,7 +66,6 @@
             if (_cws.State == WebSocketState.Open)
             {
                 var listenerTask = Task.Run(StartListening);
-                InvokeConnectedEvent();
             }
         }
 
@@ -85,7 +85,7 @@
                 {
                     request.Value.TrySetCanceled();
                 }
-                InvokeisconnectedEvent();
+                InvokeDisconnectedEvent();
             }
         }
 
@@ -121,7 +121,7 @@
             }
         }
 
-        protected abstract Task<JObject> SendRequestAsync(string request, JObject requestFields);
+        protected abstract Task<JObject> SendRequestAsync(string requestName, JObject requestBody);
 
         protected abstract string FindMessageId(JObject data);
 
@@ -166,7 +166,6 @@
                         }
                     } while (!result.EndOfMessage);
 
-                    Console.WriteLine(stringResult.ToString());
                     var body = JObject.Parse(stringResult.ToString());
                     var messageId = FindMessageId(body);
 
@@ -182,7 +181,7 @@
                 {
                     if (_cws.State != WebSocketState.Open)
                     {
-                        InvokeisconnectedEvent();
+                        InvokeDisconnectedEvent();
                     }
                     //TODO handle different exceptions
                     // WebSocketException, AggregateException (TaskCancelled), JsonReaderException
@@ -192,11 +191,15 @@
 
         protected virtual void InvokeConnectedEvent() => OnConnected?.Invoke(this, EventArgs.Empty);
 
-        protected virtual void InvokeisconnectedEvent() => OnDisconnected?.Invoke(this, EventArgs.Empty);
+        protected virtual void InvokeAuthenticatedEvent() => OnAuthenticated?.Invoke(this, EventArgs.Empty);
+
+        protected virtual void InvokeDisconnectedEvent() => OnDisconnected?.Invoke(this, EventArgs.Empty);
 
         protected virtual void InvokeErrorEvent(ObsClientErrorType errorType) => OnClientError?.Invoke(this, errorType);
 
         public event EventHandler OnConnected;
+
+        public event EventHandler OnAuthenticated;
 
         public event EventHandler OnDisconnected;
 

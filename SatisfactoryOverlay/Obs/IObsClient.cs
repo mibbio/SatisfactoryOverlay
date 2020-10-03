@@ -7,6 +7,8 @@
     {
         bool IsConnected { get; }
 
+        bool NeedsAuthentication { get; }
+
         Task ConnectAsync();
 
         Task DisconnectAsync();
@@ -16,6 +18,8 @@
         Task UpdateDisplayAsync(string elementName, string text);
 
         event EventHandler OnConnected;
+
+        event EventHandler OnAuthenticated;
 
         event EventHandler OnDisconnected;
 
