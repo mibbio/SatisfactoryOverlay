@@ -43,6 +43,26 @@
             }
         }
 
+        public override async Task UpdateDisplayAsync(string elementName, string text)
+        {
+            if (string.IsNullOrWhiteSpace(elementName))
+            {
+                throw new ArgumentNullException(nameof(elementName));
+            }
+
+            var fields = new JObject
+            {
+                { "source", elementName },
+                { "text", text }
+            };
+
+            var result = await SendRequestAsync("SetTextGDIPlusProperties", fields);
+            if((string)result?["status"] != "ok")
+            {
+                InvokeErrorEvent(ObsClientErrorType.InvalidRequest);
+            }
+        }
+
         public override async Task<Version> GetVersionAsync()
         {
             var result = await SendRequestAsync("GetVersion");

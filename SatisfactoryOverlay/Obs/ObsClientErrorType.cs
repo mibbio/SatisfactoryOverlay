@@ -5,6 +5,7 @@
         Unknown,
         ConnectFailure,
         RequestTimeout,
-        InvalidPassword
+        InvalidPassword,
+        InvalidRequest
     }
 }

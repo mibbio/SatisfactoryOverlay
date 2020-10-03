@@ -1,4 +1,4 @@
-﻿namespace SatisfactoryOverlay.Obs
+namespace SatisfactoryOverlay.Obs
 {
     using Newtonsoft.Json.Linq;
 
@@ -90,10 +90,7 @@
             }
         }
 
-        public async Task UpdateDisplayAsync(string elementName, string text)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task UpdateDisplayAsync(string elementName, string text);
 
         public abstract Task<Version> GetVersionAsync();
 
