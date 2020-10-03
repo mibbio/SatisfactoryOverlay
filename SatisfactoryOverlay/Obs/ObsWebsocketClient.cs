@@ -66,6 +66,7 @@
             if (_cws.State == WebSocketState.Open)
             {
                 var listenerTask = Task.Run(StartListening);
+                InvokeConnectedEvent();
             }
         }
 
