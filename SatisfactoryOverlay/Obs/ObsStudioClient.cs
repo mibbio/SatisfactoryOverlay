@@ -27,10 +27,7 @@
             var authData = await SendRequestAsync("GetAuthRequired");
             if ((bool)authData["authRequired"])
             {
-                var challenge = (string)authData["challenge"];
-                var salt = (string)authData["salt"];
-                var requestFields = GenerateAuthRequestFields(challenge, salt);
-                var authResult = await SendRequestAsync("Authenticate", requestFields);
+                var authResult = await AuthenticateAsync((string)authData["challenge"], (string)authData["salt"]);
 
                 if ((string)authResult?["status"] != "ok")
                 {
@@ -66,7 +63,7 @@
         public override async Task<Version> GetVersionAsync()
         {
             var result = await SendRequestAsync("GetVersion");
-            
+
             if ((string)result?["status"] != "ok")
             {
                 InvokeErrorEvent(ObsClientErrorType.InvalidRequest, (string)result["error"]);
@@ -129,15 +126,7 @@
 
         protected override string FindMessageId(JObject data) => (string)data["message-id"];
 
-        protected override void InvokeConnectedEvent() => base.InvokeConnectedEvent();
-
-        protected override void InvokeAuthenticatedEvent() => base.InvokeAuthenticatedEvent();
-
-        protected override void InvokeDisconnectedEvent() => base.InvokeDisconnectedEvent();
-
-        protected override void InvokeErrorEvent(ObsClientErrorType errorType, string message) => base.InvokeErrorEvent(errorType, message);
-
-        private JObject GenerateAuthRequestFields(string challenge, string salt)
+        private async Task<JObject> AuthenticateAsync(string challenge, string salt)
         {
             var sha256 = new SHA256Managed();
 
@@ -149,10 +138,20 @@
             byte[] responseHash = sha256.ComputeHash(responseBytes);
             string response = Convert.ToBase64String(responseHash);
 
-            return new JObject
+            var requestFields = new JObject
             {
                 { "auth", response }
             };
+
+            return await SendRequestAsync("Authenticate", requestFields);
         }
+
+        protected override void InvokeConnectedEvent() => base.InvokeConnectedEvent();
+
+        protected override void InvokeAuthenticatedEvent() => base.InvokeAuthenticatedEvent();
+
+        protected override void InvokeDisconnectedEvent() => base.InvokeDisconnectedEvent();
+
+        protected override void InvokeErrorEvent(ObsClientErrorType errorType, string message) => base.InvokeErrorEvent(errorType, message);
     }
 }
