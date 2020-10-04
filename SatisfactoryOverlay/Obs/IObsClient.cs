@@ -23,6 +23,6 @@
 
         event EventHandler OnDisconnected;
 
-        event EventHandler<ObsClientErrorType> OnClientError;
+        event EventHandler<ObsClientError> OnClientError;
     }
 }

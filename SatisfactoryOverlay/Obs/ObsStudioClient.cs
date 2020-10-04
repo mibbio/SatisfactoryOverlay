@@ -34,7 +34,7 @@
 
                 if ((string)authResult?["status"] != "ok")
                 {
-                    InvokeErrorEvent(ObsClientErrorType.InvalidPassword);
+                    InvokeErrorEvent(ObsClientErrorType.InvalidPassword, (string)authResult["error"]);
                 }
                 else
                 {
@@ -57,15 +57,21 @@
             };
 
             var result = await SendRequestAsync("SetTextGDIPlusProperties", fields);
-            if((string)result?["status"] != "ok")
+            if ((string)result?["status"] != "ok")
             {
-                InvokeErrorEvent(ObsClientErrorType.InvalidRequest);
+                InvokeErrorEvent(ObsClientErrorType.InvalidRequest, (string)result["error"]);
             }
         }
 
         public override async Task<Version> GetVersionAsync()
         {
             var result = await SendRequestAsync("GetVersion");
+            
+            if ((string)result?["status"] != "ok")
+            {
+                InvokeErrorEvent(ObsClientErrorType.InvalidRequest, (string)result["error"]);
+            }
+
             Version.TryParse((string)result?["obs-studio-version"], out Version version);
             return version;
         }
@@ -108,10 +114,10 @@
                 {
                     return await tcs.Task.ConfigureAwait(false);
                 }
-                catch (TaskCanceledException)
+                catch (TaskCanceledException tcEx)
                 {
                     _pendingRequests.TryRemove(messageId, out _);
-                    InvokeErrorEvent(ObsClientErrorType.RequestTimeout);
+                    InvokeErrorEvent(ObsClientErrorType.RequestTimeout, tcEx.Message); //TODO
                     return null;
                 }
             }
@@ -129,7 +135,7 @@
 
         protected override void InvokeDisconnectedEvent() => base.InvokeDisconnectedEvent();
 
-        protected override void InvokeErrorEvent(ObsClientErrorType errorType) => base.InvokeErrorEvent(errorType);
+        protected override void InvokeErrorEvent(ObsClientErrorType errorType, string message) => base.InvokeErrorEvent(errorType, message);
 
         private JObject GenerateAuthRequestFields(string challenge, string salt)
         {

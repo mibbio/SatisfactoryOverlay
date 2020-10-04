@@ -73,6 +73,7 @@
     <Compile Include="Models\MonitoringModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Obs\IObsClient.cs" />
+    <Compile Include="Obs\ObsClientError.cs" />
     <Compile Include="Obs\ObsClientErrorType.cs" />
     <Compile Include="Obs\ObsStudioClient.cs" />
     <Compile Include="Obs\ObsWebsocketClient.cs" />

@@ -58,9 +58,9 @@ namespace SatisfactoryOverlay.Obs
             {
                 await _cws.ConnectAsync(_uri, new CancellationTokenSource(_connectionTimeout).Token);
             }
-            catch (WebSocketException)
+            catch (WebSocketException wsEx)
             {
-                InvokeErrorEvent(ObsClientErrorType.ConnectFailure);
+                InvokeErrorEvent(ObsClientErrorType.ConnectFailure, wsEx.Message);
             }
 
             if (_cws.State == WebSocketState.Open)
@@ -175,7 +175,7 @@ namespace SatisfactoryOverlay.Obs
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     if (_cws.State != WebSocketState.Open)
                     {
@@ -193,7 +193,7 @@ namespace SatisfactoryOverlay.Obs
 
         protected virtual void InvokeDisconnectedEvent() => OnDisconnected?.Invoke(this, EventArgs.Empty);
 
-        protected virtual void InvokeErrorEvent(ObsClientErrorType errorType) => OnClientError?.Invoke(this, errorType);
+        protected virtual void InvokeErrorEvent(ObsClientErrorType errorType, string message) => OnClientError?.Invoke(this, new ObsClientError(errorType, message));
 
         public event EventHandler OnConnected;
 
@@ -201,6 +201,6 @@ namespace SatisfactoryOverlay.Obs
 
         public event EventHandler OnDisconnected;
 
-        public event EventHandler<ObsClientErrorType> OnClientError;
+        public event EventHandler<ObsClientError> OnClientError;
     }
 }
