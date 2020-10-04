@@ -119,7 +119,7 @@ namespace SatisfactoryOverlay.Obs
             }
         }
 
-        protected abstract Task<JObject> SendRequestAsync(string requestName, JObject requestBody);
+        protected abstract Task<JObject> SendRequestAsync(string requestName, JObject requestBody = null);
 
         protected abstract string FindMessageId(JObject data);
 
