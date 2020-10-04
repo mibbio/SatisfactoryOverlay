@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,6 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>1</WarningLevel>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>SatisfactoryOverlay.App</StartupObject>
@@ -75,6 +77,7 @@
     <Compile Include="Obs\IObsClient.cs" />
     <Compile Include="Obs\ObsClientError.cs" />
     <Compile Include="Obs\ObsClientErrorType.cs" />
+    <Compile Include="Obs\ObsStreamelementsClient.cs" />
     <Compile Include="Obs\ObsStudioClient.cs" />
     <Compile Include="Obs\ObsWebsocketClient.cs" />
     <Compile Include="Savegame\SavefileStreamExtensions.cs" />

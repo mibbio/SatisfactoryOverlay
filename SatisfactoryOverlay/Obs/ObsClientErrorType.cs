@@ -6,6 +6,7 @@
         ConnectFailure,
         RequestTimeout,
         InvalidPassword,
-        InvalidRequest
+        InvalidRequest,
+        ElementNotFound
     }
 }

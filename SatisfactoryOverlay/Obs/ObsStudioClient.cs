@@ -114,7 +114,7 @@
                 catch (TaskCanceledException tcEx)
                 {
                     _pendingRequests.TryRemove(messageId, out _);
-                    InvokeErrorEvent(ObsClientErrorType.RequestTimeout, tcEx.Message); //TODO
+                    InvokeErrorEvent(ObsClientErrorType.RequestTimeout, tcEx.Message);
                     return null;
                 }
             }
