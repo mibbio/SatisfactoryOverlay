@@ -207,4 +207,7 @@
   <data name="Label_TotalPlaytime" xml:space="preserve">
     <value>Gesamte Spielzeit</value>
   </data>
+  <data name="Label_WebsocketToken" xml:space="preserve">
+    <value>Token</value>
+  </data>
 </root>

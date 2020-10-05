@@ -290,6 +290,15 @@ namespace SatisfactoryOverlay.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Token.
+        /// </summary>
+        public static string Label_WebsocketToken {
+            get {
+                return ResourceManager.GetString("Label_WebsocketToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Localize_16x {
