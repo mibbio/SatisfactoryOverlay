@@ -1,4 +1,4 @@
-﻿namespace SatisfactoryOverlay.ViewModels
+namespace SatisfactoryOverlay.ViewModels
 {
     using mvvmlib;
 
@@ -37,55 +37,91 @@
         public bool? SessionNameVisible
         {
             get => monitor?.SessionNameVisible;
-            set => monitor.SessionNameVisible = (bool)value;
+            set
+            {
+                monitor.SessionNameVisible = (bool)value;
+                OnPropertyChanged();
+            }
         }
 
         public bool? PlaytimeVisible
         {
             get => monitor?.PlaytimeVisible;
-            set => monitor.PlaytimeVisible = (bool)value;
+            set
+            {
+                monitor.PlaytimeVisible = (bool)value;
+                OnPropertyChanged();
+            }
         }
 
         public bool? TotalPlaytimeVisible
         {
             get => monitor?.TotalPlaytimeVisible;
-            set => monitor.TotalPlaytimeVisible = (bool)value;
+            set
+            {
+                monitor.TotalPlaytimeVisible = (bool)value;
+                OnPropertyChanged();
+            }
         }
 
         public bool? StartingZoneVisible
         {
             get => monitor?.StartingZoneVisible;
-            set => monitor.StartingZoneVisible = (bool)value;
+            set
+            {
+                monitor.StartingZoneVisible = (bool)value;
+                OnPropertyChanged();
+            }
         }
 
         public bool? ModsVisible
         {
             get => monitor?.ModsVisible;
-            set => monitor.ModsVisible = (bool)value;
+            set
+            {
+                monitor.ModsVisible = (bool)value;
+                OnPropertyChanged();
+            }
         }
 
         public string ObsElementName
         {
             get => monitor?.ObsElementName;
-            set => monitor.ObsElementName = value;
+            set
+            {
+                monitor.ObsElementName = value;
+                OnPropertyChanged();
+            }
         }
 
         public string ObsIpAddress
         {
             get => monitor?.ObsIpAddress;
-            set => monitor.ObsIpAddress = value;
+            set
+            {
+                monitor.ObsIpAddress = value;
+                OnPropertyChanged();
+            }
         }
 
         public int ObsPort
         {
             get => (monitor != null) ? monitor.ObsPort : -1;
-            set => monitor.ObsPort = value;
+            set
+            {
+                monitor.ObsPort = value;
+                OnPropertyChanged();
+            }
         }
 
         public string WebsocketPassword
         {
             get => monitor?.WebsocketPassword;
-            set => monitor.WebsocketPassword = value;
+            set
+            {
+                monitor.WebsocketPassword = value;
+                OnPropertyChanged();
+            }
         }
 
         private string obsInfo = Resources.Message_Disconnected;
