@@ -2,8 +2,19 @@
 {
     using Newtonsoft.Json;
 
+    using SatisfactoryOverlay.Converter;
+
     using System.ComponentModel;
     using System.IO;
+
+    [TypeConverter(typeof(EnumDescriptionConverter))]
+    public enum ObsVariant
+    {
+        [Description("OBS Studio")]
+        Studio,
+        [Description("StreamlabsOBS")]
+        Streamelements
+    }
 
     [JsonObject(MissingMemberHandling = MissingMemberHandling.Ignore, ItemNullValueHandling = NullValueHandling.Ignore, MemberSerialization = MemberSerialization.OptOut)]
     public class SettingsModel
@@ -49,6 +60,10 @@
         [DefaultValue("")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string WebsocketPassword { get; set; }
+
+        [DefaultValue(ObsVariant.Studio)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public ObsVariant StreamingTool { get; set; }
 
         private SettingsModel() { }
 

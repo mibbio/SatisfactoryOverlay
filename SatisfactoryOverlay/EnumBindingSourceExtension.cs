@@ -3,7 +3,7 @@
     using System;
     using System.Windows.Markup;
 
-    public class EnumBindingSourceExtension : MarkupExtension
+    internal class EnumBindingSourceExtension : MarkupExtension
     {
         private Type _enumType;
 

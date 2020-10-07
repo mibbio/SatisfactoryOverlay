@@ -1,8 +1,7 @@
-namespace SatisfactoryOverlay.ViewModels
+﻿namespace SatisfactoryOverlay.ViewModels
 {
     using mvvmlib;
 
-    using SatisfactoryOverlay.EventArgs;
     using SatisfactoryOverlay.Models;
     using SatisfactoryOverlay.Properties;
     using SatisfactoryOverlay.Savegame;
@@ -11,6 +10,7 @@ namespace SatisfactoryOverlay.ViewModels
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -84,6 +84,19 @@ namespace SatisfactoryOverlay.ViewModels
             }
         }
 
+        public ObsVariant StreamingTool
+        {
+            get => (monitor != null) ? monitor.StreamingTool : ObsVariant.Studio;
+            set
+            {
+                if (monitor != null)
+                {
+                    monitor.StreamingTool = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public string ObsElementName
         {
             get => monitor?.ObsElementName;
@@ -124,14 +137,16 @@ namespace SatisfactoryOverlay.ViewModels
             }
         }
 
-        private string obsInfo = Resources.Message_Disconnected;
+        public bool IsConnected => monitor.IsConnected;
 
-        public string OBSInfo
+        private string _statusText = string.Empty;
+
+        public string StatusText
         {
-            get => obsInfo;
+            get => _statusText;
             set
             {
-                obsInfo = value;
+                _statusText = value;
                 OnPropertyChanged();
             }
         }
@@ -163,6 +178,14 @@ namespace SatisfactoryOverlay.ViewModels
             try
             {
                 monitor = new MonitoringModel();
+                monitor.OnConnected += (s, e) => OnPropertyChanged(nameof(IsConnected));
+                monitor.OnDisconnected += (s, e) => OnPropertyChanged(nameof(IsConnected));
+                monitor.OnObsError += (s, e) =>
+                {
+                    StatusText = e.Message;
+                    Console.WriteLine("[ERROR] {0}", e.Message);
+                    OnPropertyChanged(nameof(IsConnected));
+                };
             }
             catch (Exception)
             {
@@ -176,11 +199,14 @@ namespace SatisfactoryOverlay.ViewModels
 #endif
             }
 
-            monitor.OBSInfoChanged += Model_OBSInfoChanged;
-            monitor.OBSConnectFailed += (sender, message) =>
-            {
-                OBSInfo = message;
-            };
+            LoadSessions();
+
+            PropertyChanged += HandlePropertyChanged;
+        }
+
+        private void LoadSessions()
+        {
+            Sessions.Clear();
 
             List<SavegameHeader> savegames = new List<SavegameHeader>();
             foreach (var file in Directory.EnumerateFiles(App.SavegameFolder, "*.sav"))
@@ -200,15 +226,17 @@ namespace SatisfactoryOverlay.ViewModels
             Release = update;
         }
 
-        private void Model_OBSInfoChanged(object sender, ConnectionEventArg e)
+        private async void HandlePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            switch (e.Status)
+            switch (e.PropertyName)
             {
-                case ConnectionEventArg.ConnectionStatus.Connected:
-                    OBSInfo = $"{Resources.Message_Connected} | OBS v{e.ObsVersion} | Plugin v{e.PluginVersion}";
-                    break;
-                case ConnectionEventArg.ConnectionStatus.Disconnected:
-                    OBSInfo = Resources.Message_Disconnected;
+                case nameof(MonitoredSession):
+                case nameof(SessionNameVisible):
+                case nameof(PlaytimeVisible):
+                case nameof(TotalPlaytimeVisible):
+                case nameof(StartingZoneVisible):
+                case nameof(ModsVisible):
+                    await monitor.UpdateDisplayOptionsAsync();
                     break;
                 default:
                     break;
@@ -218,17 +246,26 @@ namespace SatisfactoryOverlay.ViewModels
         private bool IsValidIP(string ip) => IPAddress.TryParse(ip, out var _);
 
         private ICommand _cmdConnectOBS;
+        public ICommand CmdConnectOBS => _cmdConnectOBS ??= new RelayCommand(
+            async () =>
+            {
+                try
+                {
+                    await monitor.StartAsync();
+                }
+                catch (Exception) { }
+            }, () => !IsConnected && IsValidIP(ObsIpAddress));
 
-        public ICommand CmdConnectOBS => _cmdConnectOBS ?? (_cmdConnectOBS = new RelayCommand(
-            () => monitor.ConnectOBS($"ws://{ObsIpAddress}:{ObsPort}", WebsocketPassword),
-            () => (monitor?.IsConnected != true) && IsValidIP(ObsIpAddress)));
+        private ICommand _cmdRefreshSessions;
+        public ICommand CmdRefreshSessions => _cmdRefreshSessions ??= new RelayCommand(() =>
+        {
+        });
 
         private ICommand _cmdOpenUpdate;
-
-        public ICommand CmdOpenUpdate => _cmdOpenUpdate ?? (_cmdOpenUpdate = new RelayCommand(() =>
+        public ICommand CmdOpenUpdate => _cmdOpenUpdate ??= new RelayCommand(() =>
         {
             Helper.OpenUrlInBrowser(Release.Link);
             Release = null;
-        }));
+        });
     }
 }

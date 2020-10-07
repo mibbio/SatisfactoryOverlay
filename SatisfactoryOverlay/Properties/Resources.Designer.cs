@@ -272,29 +272,38 @@ namespace SatisfactoryOverlay.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Total playtime.
+        ///   Looks up a localized string similar to API Token.
         /// </summary>
-        public static string Label_TotalPlaytime {
+        public static string Label_StreamlabsToken {
             get {
-                return ResourceManager.GetString("Label_TotalPlaytime", resourceCulture);
+                return ResourceManager.GetString("Label_StreamlabsToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streaming application.
+        /// </summary>
+        public static string Label_Streamtool {
+            get {
+                return ResourceManager.GetString("Label_Streamtool", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Websocket password.
         /// </summary>
-        public static string Label_WebsocketPassword {
+        public static string Label_StudioPassword {
             get {
-                return ResourceManager.GetString("Label_WebsocketPassword", resourceCulture);
+                return ResourceManager.GetString("Label_StudioPassword", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Token.
+        ///   Looks up a localized string similar to Total playtime.
         /// </summary>
-        public static string Label_WebsocketToken {
+        public static string Label_TotalPlaytime {
             get {
-                return ResourceManager.GetString("Label_WebsocketToken", resourceCulture);
+                return ResourceManager.GetString("Label_TotalPlaytime", resourceCulture);
             }
         }
         
@@ -305,15 +314,6 @@ namespace SatisfactoryOverlay.Properties {
             get {
                 object obj = ResourceManager.GetObject("Localize_16x", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to can not connect to OBS.
-        /// </summary>
-        public static string Message_CanNotConnect {
-            get {
-                return ResourceManager.GetString("Message_CanNotConnect", resourceCulture);
             }
         }
         
@@ -359,15 +359,6 @@ namespace SatisfactoryOverlay.Properties {
         public static string Message_UpdateAvailable {
             get {
                 return ResourceManager.GetString("Message_UpdateAvailable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to wrong websocket password.
-        /// </summary>
-        public static string Message_WrongPassword {
-            get {
-                return ResourceManager.GetString("Message_WrongPassword", resourceCulture);
             }
         }
         

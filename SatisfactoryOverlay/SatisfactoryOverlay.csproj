@@ -70,7 +70,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converter\BooleanInversionConverter.cs" />
+    <Compile Include="Converter\EnumDescriptionConverter.cs" />
     <Compile Include="EventArgs\ConnectionEventArg.cs" />
+    <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Models\MonitoringModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
@@ -132,10 +135,6 @@
       <Project>{1930b5e1-b2b1-488e-804a-64efd10b0e0d}</Project>
       <Name>mvvmlib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OBS.WebSocket.NET\OBS.WebSocket.NET\OBS.WebSocket.NET.csproj">
-      <Project>{a501abc4-89db-4d22-94e8-22782730193f}</Project>
-      <Name>OBS.WebSocket.NET</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\CloseSolution_16x.png" />
@@ -154,6 +153,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Localize_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.3</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
