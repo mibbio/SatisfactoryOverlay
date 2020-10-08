@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:vm="clr-namespace:SatisfactoryOverlay.ViewModels"
         xmlns:mvvm="clr-namespace:mvvmlib;assembly=mvvmlib"
         xmlns:models="clr-namespace:SatisfactoryOverlay.Models"
@@ -11,7 +10,7 @@
         xmlns:local="clr-namespace:SatisfactoryOverlay" 
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance {x:Type vm:MainWindowViewModel}}"
-        Title="Satisfactory Overlay Manager" Height="470" Width="400" ResizeMode="CanMinimize">
+        Title="Satisfactory Overlay Manager" Height="600" Width="400" ResizeMode="CanMinimize">
 
     <Window.Resources>
         <vm:MainWindowViewModel x:Key="ViewModel"/>
@@ -40,7 +39,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <ComboBox Grid.Column="0" ItemsSource="{Binding Path=Sessions}" SelectedItem="{Binding Path=MonitoredSession}"/>
-                            <Button Grid.Column="1" Content="{StaticResource IconRefresh}" Margin="4 0 0 0" Padding="4 0" Command=""/>
+                            <Button Grid.Column="1" Content="{StaticResource IconRefresh}" Margin="4 0 0 0" Padding="4 0" Command="{Binding Path=CmdRefreshSessions}"/>
                         </Grid>
 
                         <GroupBox Header="{Binding Path=ResData.Header_DisplayedInfo}" Padding="0 4 0 0">
@@ -60,7 +59,7 @@
                                 <CheckBox IsChecked="{Binding Path=ModsVisible}">
                                     <TextBlock Text="{Binding Path=ResData.CheckBox_Modlist}"/>
                                 </CheckBox>
-                                
+
                             </StackPanel>
                         </GroupBox>
                     </StackPanel>
@@ -69,10 +68,10 @@
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="{Binding Path=ResData.Label_Streamtool}"/>
                         <ComboBox Margin="0 0 0 4" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type models:ObsVariant}}}" SelectedItem="{Binding Path=StreamingTool}"
-                                  IsEnabled="{Binding Path=IsConnected, Converter={StaticResource BooleanInversion}}"/>
+                                  IsEnabled="{Binding Path=CanConnect}"/>
 
                         <TextBlock Text="{Binding Path=ResData.Label_ObsElement}"/>
-                        <TextBox VerticalAlignment="Center" Padding="2" Text="{Binding Path=ObsElementName}" IsEnabled="{Binding Path=IsConnected, Converter={StaticResource BooleanInversion}}"/>
+                        <TextBox VerticalAlignment="Center" Padding="2" Text="{Binding Path=ObsElementName}" IsEnabled="{Binding Path=CanConnect}"/>
 
                         <Grid>
                             <Grid.RowDefinitions>
@@ -89,11 +88,11 @@
                                 <TextBlock Text="{Binding Path=ResData.Label_ObsIpHint, StringFormat={}({0})}" Margin="4 4 0 0" Foreground="Gray" FontStyle="Italic"/>
                             </StackPanel>
                             <TextBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Padding="2" Margin="0 0 4 0" Text="{Binding Path=ObsIpAddress}"
-                                     IsEnabled="{Binding Path=IsConnected, Converter={StaticResource BooleanInversion}}"/>
+                                     IsEnabled="{Binding Path=CanConnect}"/>
 
                             <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" Text="{Binding Path=ResData.Label_ObsPort}"/>
                             <TextBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Padding="2" Text="{Binding Path=ObsPort}"
-                                     IsEnabled="{Binding Path=IsConnected, Converter={StaticResource BooleanInversion}}"/>
+                                     IsEnabled="{Binding Path=CanConnect}"/>
                         </Grid>
 
                         <TextBlock Margin="0 4 0 0">
@@ -113,10 +112,13 @@
                         <PasswordBox VerticalAlignment="Center" Padding="2" PasswordChar="*"
                                  mvvm:PasswordBoxAssistant.BindPassword="True"
                                  mvvm:PasswordBoxAssistant.BoundPassword="{Binding Path=WebsocketPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 IsEnabled="{Binding Path=IsConnected, Converter={StaticResource BooleanInversion}}"/>
+                                 IsEnabled="{Binding Path=CanConnect}"/>
 
                         <Button Content="{Binding Path=ResData.Button_Connect}" Margin="0 4 0 0" Padding="8 2" HorizontalAlignment="Right" Command="{Binding Path=CmdConnectOBS}"/>
                     </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Log" Padding="4">
+                    <ListBox Height="100" ItemsSource="{Binding Path=EventLog.Entries}"/>
                 </GroupBox>
             </StackPanel>
 

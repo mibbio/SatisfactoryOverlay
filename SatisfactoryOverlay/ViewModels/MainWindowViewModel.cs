@@ -14,6 +14,8 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
 
@@ -139,6 +141,19 @@
 
         public bool IsConnected => monitor.IsConnected;
 
+        private bool _canConnect;
+
+        public bool CanConnect
+        {
+            get => _canConnect;
+            private set
+            {
+                if (_canConnect == value) return;
+                _canConnect = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string _statusText = string.Empty;
 
         public string StatusText
@@ -168,6 +183,8 @@
 
         public Resources ResData { get; } = new Resources();
 
+        public RotatingDisplayLog EventLog { get; } = new RotatingDisplayLog(5, Path.Combine(Directory.GetCurrentDirectory(), "log.txt"));
+
         public MainWindowViewModel()
         {
             if (Application.Current is IUpdateNotifier notifier)
@@ -178,12 +195,22 @@
             try
             {
                 monitor = new MonitoringModel();
-                monitor.OnConnected += (s, e) => OnPropertyChanged(nameof(IsConnected));
-                monitor.OnDisconnected += (s, e) => OnPropertyChanged(nameof(IsConnected));
+                monitor.OnConnected += (s, e) =>
+                {
+                    CanConnect = false;
+                    SetInfo(Resources.Message_Connected);
+                    OnPropertyChanged(nameof(IsConnected));
+                };
+                monitor.OnDisconnected += (s, e) =>
+                {
+                    CanConnect = true;
+                    SetInfo(Resources.Message_Disconnected);
+                    OnPropertyChanged(nameof(IsConnected));
+                };
                 monitor.OnObsError += (s, e) =>
                 {
-                    StatusText = e.Message;
-                    Console.WriteLine("[ERROR] {0}", e.Message);
+                    SetInfo(e.Message);
+                    CanConnect = !monitor.IsConnected;
                     OnPropertyChanged(nameof(IsConnected));
                 };
             }
@@ -202,6 +229,8 @@
             LoadSessions();
 
             PropertyChanged += HandlePropertyChanged;
+
+            CanConnect = true;
         }
 
         private void LoadSessions()
@@ -245,21 +274,26 @@
 
         private bool IsValidIP(string ip) => IPAddress.TryParse(ip, out var _);
 
+        private void SetInfo(string info)
+        {
+            StatusText = info;
+            EventLog.AddLine(info);
+        }
+
         private ICommand _cmdConnectOBS;
         public ICommand CmdConnectOBS => _cmdConnectOBS ??= new RelayCommand(
             async () =>
             {
                 try
                 {
+                    CanConnect = false;
                     await monitor.StartAsync();
                 }
                 catch (Exception) { }
-            }, () => !IsConnected && IsValidIP(ObsIpAddress));
+            }, () => CanConnect && !IsConnected && IsValidIP(ObsIpAddress));
 
         private ICommand _cmdRefreshSessions;
-        public ICommand CmdRefreshSessions => _cmdRefreshSessions ??= new RelayCommand(() =>
-        {
-        });
+        public ICommand CmdRefreshSessions => _cmdRefreshSessions ??= new RelayCommand(LoadSessions);
 
         private ICommand _cmdOpenUpdate;
         public ICommand CmdOpenUpdate => _cmdOpenUpdate ??= new RelayCommand(() =>

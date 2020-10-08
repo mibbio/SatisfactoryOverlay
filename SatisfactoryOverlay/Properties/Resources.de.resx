@@ -151,7 +151,7 @@
     <value>verbunden</value>
   </data>
   <data name="Message_Disconnected" xml:space="preserve">
-    <value>nicht verbunden</value>
+    <value>getrennt</value>
   </data>
   <data name="Message_WrongPassword" xml:space="preserve">
     <value>falsches Websocket Passwort</value>

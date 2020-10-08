@@ -27,6 +27,8 @@
 
         public void AddLine(string line, bool bypassDisplay = false)
         {
+            line = $"[{DateTime.Now}] {line}";
+
             if (!string.IsNullOrWhiteSpace(Logfile))
             {
                 try

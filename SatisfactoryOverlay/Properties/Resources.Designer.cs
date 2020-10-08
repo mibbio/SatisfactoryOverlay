@@ -327,7 +327,7 @@ namespace SatisfactoryOverlay.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to not connected.
+        ///   Looks up a localized string similar to disconnected.
         /// </summary>
         public static string Message_Disconnected {
             get {

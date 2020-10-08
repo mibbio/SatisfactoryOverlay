@@ -112,7 +112,7 @@
                 .Click += (s, e) => ExitApplication();
         }
 
-        private void ChangeLocale(object sender, System.EventArgs e)
+        private void ChangeLocale(object sender, EventArgs e)
         {
             if (sender is System.Windows.Forms.ToolStripMenuItem mi && mi.Tag is CultureInfo ci)
             {

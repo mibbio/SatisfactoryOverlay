@@ -206,7 +206,7 @@
     <value>connected</value>
   </data>
   <data name="Message_Disconnected" xml:space="preserve">
-    <value>not connected</value>
+    <value>disconnected</value>
   </data>
   <data name="Message_SavegameError" xml:space="preserve">
     <value>Satisfactory savegame folder does not exist or contains no savegames. Application will close now.</value>
