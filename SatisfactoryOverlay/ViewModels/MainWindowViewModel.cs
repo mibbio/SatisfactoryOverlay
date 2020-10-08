@@ -2,7 +2,6 @@
 {
     using mvvmlib;
 
-    using SatisfactoryOverlay.EventArgs;
     using SatisfactoryOverlay.Models;
     using SatisfactoryOverlay.Properties;
     using SatisfactoryOverlay.Savegame;
@@ -11,9 +10,12 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
 
@@ -37,65 +39,129 @@
         public bool? SessionNameVisible
         {
             get => monitor?.SessionNameVisible;
-            set => monitor.SessionNameVisible = (bool)value;
+            set
+            {
+                monitor.SessionNameVisible = (bool)value;
+                OnPropertyChanged();
+            }
         }
 
         public bool? PlaytimeVisible
         {
             get => monitor?.PlaytimeVisible;
-            set => monitor.PlaytimeVisible = (bool)value;
+            set
+            {
+                monitor.PlaytimeVisible = (bool)value;
+                OnPropertyChanged();
+            }
         }
 
         public bool? TotalPlaytimeVisible
         {
             get => monitor?.TotalPlaytimeVisible;
-            set => monitor.TotalPlaytimeVisible = (bool)value;
+            set
+            {
+                monitor.TotalPlaytimeVisible = (bool)value;
+                OnPropertyChanged();
+            }
         }
 
         public bool? StartingZoneVisible
         {
             get => monitor?.StartingZoneVisible;
-            set => monitor.StartingZoneVisible = (bool)value;
+            set
+            {
+                monitor.StartingZoneVisible = (bool)value;
+                OnPropertyChanged();
+            }
         }
 
         public bool? ModsVisible
         {
             get => monitor?.ModsVisible;
-            set => monitor.ModsVisible = (bool)value;
+            set
+            {
+                monitor.ModsVisible = (bool)value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObsVariant StreamingTool
+        {
+            get => (monitor != null) ? monitor.StreamingTool : ObsVariant.Studio;
+            set
+            {
+                if (monitor != null)
+                {
+                    monitor.StreamingTool = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public string ObsElementName
         {
             get => monitor?.ObsElementName;
-            set => monitor.ObsElementName = value;
+            set
+            {
+                monitor.ObsElementName = value;
+                OnPropertyChanged();
+            }
         }
 
         public string ObsIpAddress
         {
             get => monitor?.ObsIpAddress;
-            set => monitor.ObsIpAddress = value;
+            set
+            {
+                monitor.ObsIpAddress = value;
+                OnPropertyChanged();
+            }
         }
 
         public int ObsPort
         {
             get => (monitor != null) ? monitor.ObsPort : -1;
-            set => monitor.ObsPort = value;
+            set
+            {
+                monitor.ObsPort = value;
+                OnPropertyChanged();
+            }
         }
 
         public string WebsocketPassword
         {
             get => monitor?.WebsocketPassword;
-            set => monitor.WebsocketPassword = value;
-        }
-
-        private string obsInfo = Resources.Message_Disconnected;
-
-        public string OBSInfo
-        {
-            get => obsInfo;
             set
             {
-                obsInfo = value;
+                monitor.WebsocketPassword = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsConnected => monitor.IsConnected;
+
+        private bool _canConnect;
+
+        public bool CanConnect
+        {
+            get => _canConnect;
+            private set
+            {
+                if (_canConnect == value) return;
+                _canConnect = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _statusText = string.Empty;
+
+        public string StatusText
+        {
+            get => _statusText;
+            set
+            {
+                _statusText = value;
                 OnPropertyChanged();
             }
         }
@@ -117,6 +183,8 @@
 
         public Resources ResData { get; } = new Resources();
 
+        public RotatingDisplayLog EventLog { get; } = new RotatingDisplayLog(5, Path.Combine(Directory.GetCurrentDirectory(), "log.txt"));
+
         public MainWindowViewModel()
         {
             if (Application.Current is IUpdateNotifier notifier)
@@ -127,6 +195,24 @@
             try
             {
                 monitor = new MonitoringModel();
+                monitor.OnConnected += (s, e) =>
+                {
+                    CanConnect = false;
+                    SetInfo(Resources.Message_Connected);
+                    OnPropertyChanged(nameof(IsConnected));
+                };
+                monitor.OnDisconnected += (s, e) =>
+                {
+                    CanConnect = true;
+                    SetInfo(Resources.Message_Disconnected);
+                    OnPropertyChanged(nameof(IsConnected));
+                };
+                monitor.OnObsError += (s, e) =>
+                {
+                    SetInfo(e.Message);
+                    CanConnect = !monitor.IsConnected;
+                    OnPropertyChanged(nameof(IsConnected));
+                };
             }
             catch (Exception)
             {
@@ -140,11 +226,16 @@
 #endif
             }
 
-            monitor.OBSInfoChanged += Model_OBSInfoChanged;
-            monitor.OBSConnectFailed += (sender, message) =>
-            {
-                OBSInfo = message;
-            };
+            LoadSessions();
+
+            PropertyChanged += HandlePropertyChanged;
+
+            CanConnect = true;
+        }
+
+        private void LoadSessions()
+        {
+            Sessions.Clear();
 
             List<SavegameHeader> savegames = new List<SavegameHeader>();
             foreach (var file in Directory.EnumerateFiles(App.SavegameFolder, "*.sav"))
@@ -164,15 +255,17 @@
             Release = update;
         }
 
-        private void Model_OBSInfoChanged(object sender, ConnectionEventArg e)
+        private async void HandlePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            switch (e.Status)
+            switch (e.PropertyName)
             {
-                case ConnectionEventArg.ConnectionStatus.Connected:
-                    OBSInfo = $"{Resources.Message_Connected} | OBS v{e.ObsVersion} | Plugin v{e.PluginVersion}";
-                    break;
-                case ConnectionEventArg.ConnectionStatus.Disconnected:
-                    OBSInfo = Resources.Message_Disconnected;
+                case nameof(MonitoredSession):
+                case nameof(SessionNameVisible):
+                case nameof(PlaytimeVisible):
+                case nameof(TotalPlaytimeVisible):
+                case nameof(StartingZoneVisible):
+                case nameof(ModsVisible):
+                    await monitor.UpdateDisplayOptionsAsync();
                     break;
                 default:
                     break;
@@ -181,18 +274,32 @@
 
         private bool IsValidIP(string ip) => IPAddress.TryParse(ip, out var _);
 
-        private ICommand _cmdConnectOBS;
+        private void SetInfo(string info)
+        {
+            StatusText = info;
+            EventLog.AddLine(info);
+        }
 
-        public ICommand CmdConnectOBS => _cmdConnectOBS ?? (_cmdConnectOBS = new RelayCommand(
-            () => monitor.ConnectOBS($"ws://{ObsIpAddress}:{ObsPort}", WebsocketPassword),
-            () => (monitor?.IsConnected != true) && IsValidIP(ObsIpAddress)));
+        private ICommand _cmdConnectOBS;
+        public ICommand CmdConnectOBS => _cmdConnectOBS ??= new RelayCommand(
+            async () =>
+            {
+                try
+                {
+                    CanConnect = false;
+                    await monitor.StartAsync();
+                }
+                catch (Exception) { }
+            }, () => CanConnect && !IsConnected && IsValidIP(ObsIpAddress));
+
+        private ICommand _cmdRefreshSessions;
+        public ICommand CmdRefreshSessions => _cmdRefreshSessions ??= new RelayCommand(LoadSessions);
 
         private ICommand _cmdOpenUpdate;
-
-        public ICommand CmdOpenUpdate => _cmdOpenUpdate ?? (_cmdOpenUpdate = new RelayCommand(() =>
+        public ICommand CmdOpenUpdate => _cmdOpenUpdate ??= new RelayCommand(() =>
         {
             Helper.OpenUrlInBrowser(Release.Link);
             Release = null;
-        }));
+        });
     }
 }

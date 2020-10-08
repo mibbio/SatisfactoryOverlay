@@ -187,23 +187,26 @@
   <data name="Label_ShowSettings" xml:space="preserve">
     <value>Show settings</value>
   </data>
+  <data name="Label_StreamlabsToken" xml:space="preserve">
+    <value>API Token</value>
+  </data>
+  <data name="Label_Streamtool" xml:space="preserve">
+    <value>Streaming application</value>
+  </data>
+  <data name="Label_StudioPassword" xml:space="preserve">
+    <value>Websocket password</value>
+  </data>
   <data name="Label_TotalPlaytime" xml:space="preserve">
     <value>Total playtime</value>
   </data>
-  <data name="Label_WebsocketPassword" xml:space="preserve">
-    <value>Websocket password</value>
-  </data>
   <data name="Localize_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Localize_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Message_CanNotConnect" xml:space="preserve">
-    <value>can not connect to OBS</value>
   </data>
   <data name="Message_Connected" xml:space="preserve">
     <value>connected</value>
   </data>
   <data name="Message_Disconnected" xml:space="preserve">
-    <value>not connected</value>
+    <value>disconnected</value>
   </data>
   <data name="Message_SavegameError" xml:space="preserve">
     <value>Satisfactory savegame folder does not exist or contains no savegames. Application will close now.</value>
@@ -213,9 +216,6 @@
   </data>
   <data name="Message_UpdateAvailable" xml:space="preserve">
     <value>There is a new version ready for download</value>
-  </data>
-  <data name="Message_WrongPassword" xml:space="preserve">
-    <value>wrong websocket password</value>
   </data>
   <data name="ShowDetailsPane_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ShowDetailsPane_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

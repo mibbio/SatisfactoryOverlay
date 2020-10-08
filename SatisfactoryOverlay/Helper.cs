@@ -28,5 +28,15 @@
         }
 
         public static void OpenUrlInBrowser(Uri uri) => OpenUrlInBrowser(uri.AbsoluteUri);
+
+        [DebuggerHidden]
+        [Conditional("DEBUG")]
+        public static void DebugBreak()
+        {
+            if (Debugger.IsAttached)
+            {
+                Debugger.Break();
+            }
+        }
     }
 }

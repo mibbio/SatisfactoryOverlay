@@ -135,7 +135,7 @@
   <data name="Label_ObsIpHint" xml:space="preserve">
     <value>127.0.0.1 für lokalen PC</value>
   </data>
-  <data name="Label_WebsocketPassword" xml:space="preserve">
+  <data name="Label_StudioPassword" xml:space="preserve">
     <value>Websocket Passwort</value>
   </data>
   <data name="Label_ObsElement" xml:space="preserve">
@@ -147,14 +147,11 @@
   <data name="Label_SessionSelect" xml:space="preserve">
     <value>Sitzung / Spielstand</value>
   </data>
-  <data name="Message_CanNotConnect" xml:space="preserve">
-    <value>kann nicht mit OBS verbinden</value>
-  </data>
   <data name="Message_Connected" xml:space="preserve">
     <value>verbunden</value>
   </data>
   <data name="Message_Disconnected" xml:space="preserve">
-    <value>nicht verbunden</value>
+    <value>getrennt</value>
   </data>
   <data name="Message_WrongPassword" xml:space="preserve">
     <value>falsches Websocket Passwort</value>
@@ -206,5 +203,11 @@
   </data>
   <data name="Label_TotalPlaytime" xml:space="preserve">
     <value>Gesamte Spielzeit</value>
+  </data>
+  <data name="Label_StreamlabsToken" xml:space="preserve">
+    <value>API Token</value>
+  </data>
+  <data name="Label_Streamtool" xml:space="preserve">
+    <value>Streamprogramm</value>
   </data>
 </root>
