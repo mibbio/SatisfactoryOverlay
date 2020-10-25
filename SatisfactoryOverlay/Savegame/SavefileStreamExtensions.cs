@@ -1,4 +1,4 @@
-﻿namespace SatisfactoryOverlay.Savegame
+namespace SatisfactoryOverlay.Savegame
 {
     using System;
     using System.IO;
@@ -75,7 +75,7 @@
             try
             {
                 int rawLength = source.ReadInt();
-                int realLength = Math.Abs(rawLength);
+                int realLength = (rawLength < 0) ? rawLength * -2 : rawLength;
                 byte[] buffer = new byte[realLength];
                 if (source.Length - source.Position < realLength)
                 {
