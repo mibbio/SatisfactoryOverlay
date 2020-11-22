@@ -13,7 +13,7 @@ Embed live information of your savegame/session in OBS. Displayed data will be u
 - Click on QR code and then on `Details` to get the `port` and `API Token`
 ### For both
 - Create new (empty) `Text (GDI+)` source in OBS
-- Download an extract [latest version](https://github.com/mibbio/SatisfactoryOverlay/releases/latest) of SatisfactoryOverlay
+- Download and extract [latest version](https://github.com/mibbio/SatisfactoryOverlay/releases/latest) of SatisfactoryOverlay
 - Start `SatisfactoryOverlay.exe`
 - To close the application, right click on it's icon in the system tray
 ***
