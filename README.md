@@ -3,7 +3,8 @@ Embed live information of your savegame/session in OBS. Displayed data will be u
 
 ![application window](https://i.imgur.com/YUQlIhP.png)
 
-[Short video of application in action](https://www.youtube.com/watch?v=7cgMVmdSLbA) (don't mind the german text, the latest version is in english)
+[Short video of application in action](https://www.youtube.com/watch?v=7cgMVmdSLbA)
+(don't mind the german text, the latest version is in english & german, depending on your OS locale)
 ***
 ## Usage / Setup
 ### For OBS Studio only
