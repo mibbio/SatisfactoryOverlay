@@ -214,6 +214,12 @@
   <data name="Message_SavegameErrorTitle" xml:space="preserve">
     <value>No savegames found</value>
   </data>
+  <data name="Message_TooManySavegameFolders" xml:space="preserve">
+    <value>There are more than one valid subdirectories in the savegame folder. If some of them are your personal backups, please move them to another location.</value>
+  </data>
+  <data name="Message_TooManySavegameFoldersTitle" xml:space="preserve">
+    <value>Invalid structure of savegame folder</value>
+  </data>
   <data name="Message_UpdateAvailable" xml:space="preserve">
     <value>There is a new version ready for download</value>
   </data>

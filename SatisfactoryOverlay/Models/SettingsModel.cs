@@ -23,6 +23,10 @@
 
         [DefaultValue("")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string SavegameFolder { get; set; }
+
+        [DefaultValue("")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string LastSessionName { get; set; }
 
         [DefaultValue(false)]

@@ -1,5 +1,7 @@
 ﻿namespace SatisfactoryOverlay.Models
 {
+    using mvvmlib;
+
     using SatisfactoryOverlay.Obs;
     using SatisfactoryOverlay.Properties;
     using SatisfactoryOverlay.Savegame;
@@ -147,7 +149,9 @@
 
         public MonitoringModel()
         {
-            watcher = new FileSystemWatcher(App.SavegameFolder, "*.sav")
+            settings = ServiceLocator.Default.GetService<SettingsModel>();
+
+            watcher = new FileSystemWatcher(settings.SavegameFolder, "*.sav")
             {
                 NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastAccess | NotifyFilters.FileName,
                 IncludeSubdirectories = false,
@@ -157,8 +161,6 @@
             watcher.Changed += OnSavefileWatcherEvent;
             watcher.Created += OnSavefileWatcherEvent;
             watcher.Renamed += OnSavefileWatcherEvent;
-
-            settings = SettingsModel.PopulateSettings();
         }
 
         public async Task StartAsync()
@@ -231,7 +233,7 @@
 
         private void UpdateSavegameData()
         {
-            var savegames = from file in Directory.EnumerateFiles(App.SavegameFolder, "*.sav")
+            var savegames = from file in Directory.EnumerateFiles(settings.SavegameFolder, "*.sav")
                             select SavegameHeader.Read(file) into header
                             group header by header.SessionName into session
                             select session.OrderByDescending(sh => sh.SaveDate).First();

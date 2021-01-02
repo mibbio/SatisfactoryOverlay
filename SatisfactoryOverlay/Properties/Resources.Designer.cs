@@ -354,6 +354,24 @@ namespace SatisfactoryOverlay.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There are more than one valid subdirectories in the savegame folder. If some of them are your personal backups, please move them to another location..
+        /// </summary>
+        public static string Message_TooManySavegameFolders {
+            get {
+                return ResourceManager.GetString("Message_TooManySavegameFolders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid structure of savegame folder.
+        /// </summary>
+        public static string Message_TooManySavegameFoldersTitle {
+            get {
+                return ResourceManager.GetString("Message_TooManySavegameFoldersTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There is a new version ready for download.
         /// </summary>
         public static string Message_UpdateAvailable {

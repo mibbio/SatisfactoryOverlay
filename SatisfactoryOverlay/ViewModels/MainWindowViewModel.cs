@@ -14,8 +14,6 @@
     using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Threading;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
 
@@ -238,7 +236,8 @@
             Sessions.Clear();
 
             List<SavegameHeader> savegames = new List<SavegameHeader>();
-            foreach (var file in Directory.EnumerateFiles(App.SavegameFolder, "*.sav"))
+            var folder = ServiceLocator.Default.GetService<SettingsModel>().SavegameFolder;
+            foreach (var file in Directory.EnumerateFiles(ServiceLocator.Default.GetService<SettingsModel>().SavegameFolder, "*.sav"))
             {
                 savegames.Add(SavegameHeader.Read(file));
             }

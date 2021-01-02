@@ -210,4 +210,10 @@
   <data name="Label_Streamtool" xml:space="preserve">
     <value>Streamprogramm</value>
   </data>
+  <data name="Message_TooManySavegameFolders" xml:space="preserve">
+    <value>Im Spielstandordner befinden sich zu viele Unterverzeichnisse mit Spielständen. Sollten einige davon deine Backups sein, verschiebe diese bitte an einen anderen Ort.</value>
+  </data>
+  <data name="Message_TooManySavegameFoldersTitle" xml:space="preserve">
+    <value>Ungültige Verzeichnisstruktur im Spielstandordner</value>
+  </data>
 </root>

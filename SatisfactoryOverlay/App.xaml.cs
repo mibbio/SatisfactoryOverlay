@@ -1,9 +1,13 @@
 ﻿namespace SatisfactoryOverlay
 {
+    using mvvmlib;
+
+    using SatisfactoryOverlay.Models;
     using SatisfactoryOverlay.Updater;
     using SatisfactoryOverlay.Views;
 
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Globalization;
     using System.IO;
@@ -20,50 +24,51 @@
 
         private bool isExit;
 
-        public static string SavegameFolder
-        {
-            get
-            {
-                string savegameFolder = string.Empty;
-                string savegameRootFolder = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "FactoryGame", "Saved", "SaveGames");
-                try
-                {
-                    savegameFolder = Directory.EnumerateDirectories(savegameRootFolder)
-                    .Where(d => !d.Equals("common")).FirstOrDefault();
-
-                    if (string.IsNullOrWhiteSpace(savegameFolder))
-                    {
-                        return string.Empty;
-                    }
-                }
-                catch (IOException)
-                {
-                    return string.Empty;
-                }
-
-                return savegameFolder;
-            }
-        }
-
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            MainWindow = new MainWindowView();
-            MainWindow.Closing += MainWindow_Closing;
+            var settings = SettingsModel.PopulateSettings();
+            if (string.IsNullOrWhiteSpace(settings.SavegameFolder))
+            {
+                var folders = GetSavegameFolder();
+                if (folders == null || folders.Count() < 1)
+                {
+                    MessageBox.Show(SatisfactoryOverlay.Properties.Resources.Message_SavegameError, SatisfactoryOverlay.Properties.Resources.Message_SavegameErrorTitle,
+                        MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.None);
+                    Shutdown();
+                }
+                else if (folders.Count() > 1)
+                {
+                    MessageBox.Show(SatisfactoryOverlay.Properties.Resources.Message_TooManySavegameFolders, SatisfactoryOverlay.Properties.Resources.Message_TooManySavegameFoldersTitle,
+                        MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.None);
+                    Shutdown();
+                }
+                else if (folders.Count() == 1)
+                {
+                    settings.SavegameFolder = folders.First();
+                }
+            }
 
-            notifyIcon = new System.Windows.Forms.NotifyIcon();
-            notifyIcon.DoubleClick += (s, args) => ShowMainWindow();
-            notifyIcon.Icon = SatisfactoryOverlay.Properties.Resources.app;
-            notifyIcon.Text = "Satisfactory Overlay Manager";
-            notifyIcon.Visible = true;
+            // continue execution only if savegame folder is set
+            if (!string.IsNullOrWhiteSpace(settings.SavegameFolder))
+            {
+                ServiceLocator.Default.RegisterService(settings);
 
-            await SetupUpdateCheckAsync();
+                MainWindow = new MainWindowView();
+                MainWindow.Closing += MainWindow_Closing;
 
-            CreateContextMenu();
-            ShowMainWindow();
+                notifyIcon = new System.Windows.Forms.NotifyIcon();
+                notifyIcon.DoubleClick += (s, args) => ShowMainWindow();
+                notifyIcon.Icon = SatisfactoryOverlay.Properties.Resources.app;
+                notifyIcon.Text = "Satisfactory Overlay Manager";
+                notifyIcon.Visible = true;
+
+                await SetupUpdateCheckAsync();
+
+                CreateContextMenu();
+                ShowMainWindow();
+            }
         }
 
         private async Task SetupUpdateCheckAsync()
@@ -78,6 +83,21 @@
             }
 
             updateChecker.CheckWithInterval(TimeSpan.FromMinutes(15));
+        }
+
+        private IEnumerable<string> GetSavegameFolder()
+        {
+            string savegameFolder = string.Empty;
+            string savegameRootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FactoryGame", "Saved", "SaveGames");
+
+            try
+            {
+                return Directory.EnumerateDirectories(savegameRootFolder).Where(d => !d.Equals("common") && Directory.EnumerateFiles(d).Any(f => f.EndsWith(".sav")));
+            }
+            catch (IOException)
+            {
+                return null;
+            }
         }
 
         private void HandleUpdateAvailable(object sender, ReleaseData update)
@@ -125,7 +145,7 @@
                 MainWindow = new MainWindowView();
                 MainWindow.Closing += MainWindow_Closing;
 
-                if(oldWindow.IsVisible)
+                if (oldWindow.IsVisible)
                 {
                     MainWindow.Show();
                 }
