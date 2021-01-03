@@ -21,7 +21,7 @@
 
         event EventHandler OnAuthenticated;
 
-        event EventHandler OnDisconnected;
+        event EventHandler<string> OnDisconnected;
 
         event EventHandler<ObsClientError> OnClientError;
     }

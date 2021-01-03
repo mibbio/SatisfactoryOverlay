@@ -86,7 +86,7 @@ namespace SatisfactoryOverlay.Obs
                 {
                     request.Value.TrySetCanceled();
                 }
-                InvokeDisconnectedEvent();
+                InvokeDisconnectedEvent(string.Empty);
             }
         }
 
@@ -175,11 +175,11 @@ namespace SatisfactoryOverlay.Obs
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     if (_cws.State != WebSocketState.Open)
                     {
-                        InvokeDisconnectedEvent();
+                        InvokeDisconnectedEvent(ex.Message);
                     }
                     //TODO handle different exceptions
                     // WebSocketException, AggregateException (TaskCancelled), JsonReaderException
@@ -191,7 +191,7 @@ namespace SatisfactoryOverlay.Obs
 
         protected virtual void InvokeAuthenticatedEvent() => OnAuthenticated?.Invoke(this, EventArgs.Empty);
 
-        protected virtual void InvokeDisconnectedEvent() => OnDisconnected?.Invoke(this, EventArgs.Empty);
+        protected virtual void InvokeDisconnectedEvent(string message) => OnDisconnected?.Invoke(this, message);
 
         protected virtual void InvokeErrorEvent(ObsClientErrorType errorType, string message) => OnClientError?.Invoke(this, new ObsClientError(errorType, message));
 
@@ -199,7 +199,7 @@ namespace SatisfactoryOverlay.Obs
 
         public event EventHandler OnAuthenticated;
 
-        public event EventHandler OnDisconnected;
+        public event EventHandler<string> OnDisconnected;
 
         public event EventHandler<ObsClientError> OnClientError;
     }

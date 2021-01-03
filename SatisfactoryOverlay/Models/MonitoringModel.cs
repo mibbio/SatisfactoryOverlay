@@ -283,7 +283,7 @@
 
         public event EventHandler OnConnected;
 
-        public event EventHandler OnDisconnected;
+        public event EventHandler<string> OnDisconnected;
 
         public event EventHandler<ObsClientError> OnObsError;
     }

@@ -150,7 +150,7 @@
 
         protected override void InvokeAuthenticatedEvent() => base.InvokeAuthenticatedEvent();
 
-        protected override void InvokeDisconnectedEvent() => base.InvokeDisconnectedEvent();
+        protected override void InvokeDisconnectedEvent(string message) => base.InvokeDisconnectedEvent(message);
 
         protected override void InvokeErrorEvent(ObsClientErrorType errorType, string message) => base.InvokeErrorEvent(errorType, message);
     }

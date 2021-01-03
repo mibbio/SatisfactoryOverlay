@@ -202,7 +202,14 @@
                 monitor.OnDisconnected += (s, e) =>
                 {
                     CanConnect = true;
-                    SetInfo(Resources.Message_Disconnected);
+                    if (string.IsNullOrWhiteSpace(e))
+                    {
+                        SetInfo($"{Resources.Message_Disconnected}");
+                    }
+                    else
+                    {
+                        SetInfo($"{Resources.Message_Disconnected} ({e})");
+                    }
                     OnPropertyChanged(nameof(IsConnected));
                 };
                 monitor.OnObsError += (s, e) =>
