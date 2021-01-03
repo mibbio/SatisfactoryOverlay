@@ -92,7 +92,7 @@
 
             try
             {
-                return Directory.EnumerateDirectories(savegameRootFolder).Where(d => !d.Equals("common") && Directory.EnumerateFiles(d).Any(f => f.EndsWith(".sav")));
+                return Directory.EnumerateDirectories(savegameRootFolder).Where(d => !d.EndsWith("common") && Directory.EnumerateFiles(d).Any(f => f.EndsWith(".sav")));
             }
             catch (IOException)
             {
