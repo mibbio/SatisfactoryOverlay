@@ -1,4 +1,4 @@
-namespace SatisfactoryOverlay.Obs
+namespace SatisfactoryOverlay.Output
 {
     using Newtonsoft.Json.Linq;
 
@@ -11,7 +11,7 @@ namespace SatisfactoryOverlay.Obs
     using System.Threading;
     using System.Threading.Tasks;
 
-    public abstract class ObsWebsocketClient : IObsClient
+    public abstract class ObsWebsocketClient : IOutputClient
     {
         private const int ReceiveChunkSize = 1024;
         private const int SendChunkSize = 1024;

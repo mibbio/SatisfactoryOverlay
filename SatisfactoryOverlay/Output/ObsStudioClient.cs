@@ -1,4 +1,4 @@
-﻿namespace SatisfactoryOverlay.Obs
+﻿namespace SatisfactoryOverlay.Output
 {
     using Newtonsoft.Json.Linq;
 

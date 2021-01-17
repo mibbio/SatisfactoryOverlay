@@ -216,4 +216,13 @@
   <data name="Message_TooManySavegameFoldersTitle" xml:space="preserve">
     <value>Ungültige Verzeichnisstruktur im Spielstandordner</value>
   </data>
+  <data name="Enum_Output_File" xml:space="preserve">
+    <value>Textdatei</value>
+  </data>
+  <data name="Enum_Output_Streamlabs" xml:space="preserve">
+    <value>StreamlabsOBS</value>
+  </data>
+  <data name="Enum_Output_Studio" xml:space="preserve">
+    <value>OBS Studio</value>
+  </data>
 </root>

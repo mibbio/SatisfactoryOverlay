@@ -1,9 +1,9 @@
-﻿namespace SatisfactoryOverlay.Obs
+﻿namespace SatisfactoryOverlay.Output
 {
     using System;
     using System.Threading.Tasks;
 
-    public interface IObsClient
+    public interface IOutputClient
     {
         bool IsConnected { get; }
 

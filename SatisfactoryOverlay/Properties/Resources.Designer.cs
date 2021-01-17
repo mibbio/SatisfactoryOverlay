@@ -144,6 +144,33 @@ namespace SatisfactoryOverlay.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Text File.
+        /// </summary>
+        public static string Enum_Output_File {
+            get {
+                return ResourceManager.GetString("Enum_Output_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to StreamlabsOBS.
+        /// </summary>
+        public static string Enum_Output_Streamlabs {
+            get {
+                return ResourceManager.GetString("Enum_Output_Streamlabs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OBS Studio.
+        /// </summary>
+        public static string Enum_Output_Studio {
+            get {
+                return ResourceManager.GetString("Enum_Output_Studio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap flag_de {

@@ -2,7 +2,7 @@
 {
     using mvvmlib;
 
-    using SatisfactoryOverlay.Obs;
+    using SatisfactoryOverlay.Output;
     using SatisfactoryOverlay.Properties;
     using SatisfactoryOverlay.Savegame;
 
@@ -19,7 +19,7 @@
 
         private readonly SettingsModel settings;
 
-        private IObsClient obsClient;
+        private IOutputClient obsClient;
 
         private SavegameHeader activeSavegame;
 
@@ -145,6 +145,17 @@
             }
         }
 
+        public string OutputFilepath
+        {
+            get => settings.OutputFilepath;
+            set
+            {
+                if (string.Equals(settings.OutputFilepath, value)) return;
+                settings.OutputFilepath = value;
+                settings.Save();
+            }
+        }
+
         public bool IsConnected => (obsClient != null) && obsClient.IsConnected;
 
         public MonitoringModel()
@@ -182,6 +193,9 @@
                 case ObsVariant.Streamelements:
                     obsClient = new ObsStreamelementsClient(IPAddress.Parse(ObsIpAddress), (ushort)ObsPort, WebsocketPassword);
                     break;
+                case ObsVariant.Textfile:
+                    obsClient = new FileClient();
+                    break;
                 default:
                     break;
             }
@@ -194,7 +208,7 @@
             {
                 obsClient.OnConnected += OnConnected;
             }
-            
+
             obsClient.OnDisconnected += OnDisconnected;
             obsClient.OnClientError += OnObsError;
 
@@ -244,7 +258,12 @@
 
         private async Task UpdateObsOverlayAsync()
         {
-            if (activeSavegame == null || obsClient == null || !obsClient.IsConnected || string.IsNullOrWhiteSpace(settings.ObsElementName))
+            if (activeSavegame == null || obsClient == null || !obsClient.IsConnected)
+            {
+                return;
+            }
+
+            if(StreamingTool != ObsVariant.Textfile && string.IsNullOrWhiteSpace(settings.ObsElementName))
             {
                 return;
             }
@@ -275,7 +294,15 @@
 
             try
             {
-                await obsClient.UpdateDisplayAsync(settings.ObsElementName, text);
+                switch (StreamingTool)
+                {
+                    case ObsVariant.Textfile:
+                        await obsClient.UpdateDisplayAsync(settings.OutputFilepath, text);
+                        break;
+                    default:
+                        await obsClient.UpdateDisplayAsync(settings.ObsElementName, text);
+                        break;
+                }
             }
             catch (Exception) { } //TODO handle exceptions
 

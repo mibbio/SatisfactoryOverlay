@@ -107,6 +107,15 @@
             }
         }
 
+        public string OutputFilepath
+        {
+            get => monitor?.OutputFilepath; set
+            {
+                monitor.OutputFilepath = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string ObsIpAddress
         {
             get => monitor?.ObsIpAddress;

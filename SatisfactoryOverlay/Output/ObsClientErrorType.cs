@@ -7,6 +7,7 @@
         RequestTimeout,
         InvalidPassword,
         InvalidRequest,
-        ElementNotFound
+        ElementNotFound,
+        Filesystem
     }
 }

@@ -10,10 +10,12 @@
     [TypeConverter(typeof(EnumDescriptionConverter))]
     public enum ObsVariant
     {
-        [Description("OBS Studio")]
+        [Description("Enum_Output_Studio")]
         Studio,
-        [Description("StreamlabsOBS")]
-        Streamelements
+        [Description("Enum_Output_Streamlabs")]
+        Streamelements,
+        [Description("Enum_Output_File")]
+        Textfile
     }
 
     [JsonObject(MissingMemberHandling = MissingMemberHandling.Ignore, ItemNullValueHandling = NullValueHandling.Ignore, MemberSerialization = MemberSerialization.OptOut)]
@@ -64,6 +66,10 @@
         [DefaultValue("")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string WebsocketPassword { get; set; }
+
+        [DefaultValue(@"d:\Debug\out.txt")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string OutputFilepath { get; set; }
 
         [DefaultValue(ObsVariant.Studio)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
