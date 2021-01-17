@@ -1,5 +1,7 @@
 ﻿namespace SatisfactoryOverlay.Converter
 {
+    using SatisfactoryOverlay.Properties;
+
     using System;
     using System.ComponentModel;
     using System.Globalization;
@@ -19,7 +21,19 @@
                     if (fi != null)
                     {
                         var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
-                        return ((attributes.Length > 0) && (!string.IsNullOrWhiteSpace(attributes[0].Description))) ? attributes[0].Description : value.ToString();
+                        if ((attributes.Length > 0) && (!string.IsNullOrWhiteSpace(attributes[0].Description)))
+                        {
+                            var result = Resources.ResourceManager.GetString(attributes[0].Description);
+                            if (string.IsNullOrWhiteSpace(result))
+                            {
+                                return attributes[0].Description;
+                            }
+                            return result;
+                        }
+                        else
+                        {
+                            return value.ToString();
+                        }
                     }
                     return string.Empty;
                 }
