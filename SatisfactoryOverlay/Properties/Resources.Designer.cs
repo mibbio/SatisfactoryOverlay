@@ -89,6 +89,24 @@ namespace SatisfactoryOverlay.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select.
+        /// </summary>
+        public static string Button_SelectOutputFile {
+            get {
+                return ResourceManager.GetString("Button_SelectOutputFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start output.
+        /// </summary>
+        public static string Button_SetOutputFile {
+            get {
+                return ResourceManager.GetString("Button_SetOutputFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mods.
         /// </summary>
         public static string CheckBox_Modlist {
@@ -268,6 +286,15 @@ namespace SatisfactoryOverlay.Properties {
         public static string Label_ObsPort {
             get {
                 return ResourceManager.GetString("Label_ObsPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output File.
+        /// </summary>
+        public static string Label_OutputFile {
+            get {
+                return ResourceManager.GetString("Label_OutputFile", resourceCulture);
             }
         }
         

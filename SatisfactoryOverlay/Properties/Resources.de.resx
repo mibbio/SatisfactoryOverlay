@@ -225,4 +225,13 @@
   <data name="Enum_Output_Studio" xml:space="preserve">
     <value>OBS Studio</value>
   </data>
+  <data name="Button_SelectOutputFile" xml:space="preserve">
+    <value>Auswählen</value>
+  </data>
+  <data name="Button_SetOutputFile" xml:space="preserve">
+    <value>Ausgabe starten</value>
+  </data>
+  <data name="Label_OutputFile" xml:space="preserve">
+    <value>Ausgabedatei</value>
+  </data>
 </root>

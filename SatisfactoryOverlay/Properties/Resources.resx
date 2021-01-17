@@ -127,6 +127,12 @@
   <data name="Button_OpenUpdate" xml:space="preserve">
     <value>Open in browser</value>
   </data>
+  <data name="Button_SelectOutputFile" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Button_SetOutputFile" xml:space="preserve">
+    <value>Start output</value>
+  </data>
   <data name="CheckBox_Modlist" xml:space="preserve">
     <value>Mods</value>
   </data>
@@ -186,6 +192,9 @@
   </data>
   <data name="Label_ObsPort" xml:space="preserve">
     <value>Port</value>
+  </data>
+  <data name="Label_OutputFile" xml:space="preserve">
+    <value>Output File</value>
   </data>
   <data name="Label_Playtime" xml:space="preserve">
     <value>Playtime</value>

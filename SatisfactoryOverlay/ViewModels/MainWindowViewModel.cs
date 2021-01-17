@@ -15,6 +15,7 @@
     using System.Linq;
     using System.Net;
     using System.Windows;
+    using System.Windows.Forms;
     using System.Windows.Input;
 
     public class MainWindowViewModel : NotifyPropertyChangedBase
@@ -93,6 +94,8 @@
                 {
                     monitor.StreamingTool = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(ShowFileSettings));
+                    OnPropertyChanged(nameof(ShowObsSettings));
                 }
             }
         }
@@ -109,7 +112,8 @@
 
         public string OutputFilepath
         {
-            get => monitor?.OutputFilepath; set
+            get => monitor?.OutputFilepath;
+            set
             {
                 monitor.OutputFilepath = value;
                 OnPropertyChanged();
@@ -173,6 +177,10 @@
             }
         }
 
+        public bool ShowFileSettings => monitor?.StreamingTool == ObsVariant.Textfile;
+
+        public bool ShowObsSettings => monitor?.StreamingTool != ObsVariant.Textfile;
+
         private ReleaseData _release;
 
         public ReleaseData Release
@@ -194,7 +202,7 @@
 
         public MainWindowViewModel()
         {
-            if (Application.Current is IUpdateNotifier notifier)
+            if (System.Windows.Application.Current is IUpdateNotifier notifier)
             {
                 notifier.OnUpdateAvailable += HandleUpdateAvailable;
             }
@@ -295,6 +303,16 @@
             EventLog.AddLine(info);
         }
 
+        private ICommand _cmdStartFileOutput;
+        public ICommand CmdStartFileOutput => _cmdStartFileOutput ??= new RelayCommand(async () =>
+        {
+            try
+            {
+                await monitor.StartAsync();
+            }
+            catch (Exception) { }
+        });
+
         private ICommand _cmdConnectOBS;
         public ICommand CmdConnectOBS => _cmdConnectOBS ??= new RelayCommand(
             async () =>
@@ -315,6 +333,23 @@
         {
             Helper.OpenUrlInBrowser(Release.Link);
             Release = null;
+        });
+
+        private ICommand _cmdSelectFilepath;
+        public ICommand CmdSelectFilepath => _cmdSelectFilepath ??= new RelayCommand(() =>
+        {
+            var dialog = new OpenFileDialog()
+            {
+                CheckFileExists = true,
+                CheckPathExists = true,
+                AutoUpgradeEnabled = true,
+                Multiselect = false,
+                ValidateNames = true
+            };
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                OutputFilepath = dialog.FileName;
+            }
         });
     }
 }

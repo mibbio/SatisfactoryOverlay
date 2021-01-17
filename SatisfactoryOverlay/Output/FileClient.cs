@@ -47,7 +47,6 @@ namespace SatisfactoryOverlay.Output
             {
                 try
                 {
-
                     var directory = Path.GetDirectoryName(filepath);
                     if (!Directory.Exists(directory))
                     {

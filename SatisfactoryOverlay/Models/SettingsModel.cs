@@ -67,7 +67,7 @@
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string WebsocketPassword { get; set; }
 
-        [DefaultValue(@"d:\Debug\out.txt")]
+        [DefaultValue("")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string OutputFilepath { get; set; }
 
