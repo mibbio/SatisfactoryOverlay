@@ -1,10 +1,11 @@
 ﻿# SatisfactoryOverlay
 Embed live information of your savegame/session in OBS. Displayed data will be updated on every autosave for selected savegame.
 
-![application window](https://i.imgur.com/YUQlIhP.png)
+A short showcase video can be found [on Youtube](https://www.youtube.com/watch?v=DDKD6sPyuTY). The application supports englisch and german UI and default locale is set depending on your OS locale. Can be changed in the tray icon menu as seen in the images below.
 
-[Short video of application in action](https://www.youtube.com/watch?v=7cgMVmdSLbA)
-(don't mind the german text, the latest version is in english & german, depending on your OS locale)
+![tray icon menu](https://i.imgur.com/RP6vQOz.png)
+
+![application window](https://i.imgur.com/Aqarw8o.png)
 ***
 ## Usage / Setup
 ### For OBS Studio only
