@@ -15,6 +15,8 @@
 
     public class MonitoringModel
     {
+        private const string INVALID_FILENAME_PART = "BAK";
+
         private readonly FileSystemWatcher watcher;
 
         private readonly SettingsModel settings;
@@ -229,11 +231,15 @@
 
         private async void OnSavefileWatcherEvent(object sender, FileSystemEventArgs e)
         {
-            UpdateSavegameData();
+            if(e.ChangeType == WatcherChangeTypes.Deleted || e.FullPath.Contains(INVALID_FILENAME_PART))
+            {
+                return;
+            }
 
             var header = SavegameHeader.Read(e.FullPath);
             if (header.SessionName == MonitoredSession)
             {
+                UpdateSavegameData();
                 await UpdateObsOverlayAsync();
             }
         }
@@ -248,6 +254,7 @@
         private void UpdateSavegameData()
         {
             var savegames = from file in Directory.EnumerateFiles(settings.SavegameFolder, "*.sav")
+                            where !file.Contains(INVALID_FILENAME_PART)
                             select SavegameHeader.Read(file) into header
                             group header by header.SessionName into session
                             select session.OrderByDescending(sh => sh.SaveDate).First();
