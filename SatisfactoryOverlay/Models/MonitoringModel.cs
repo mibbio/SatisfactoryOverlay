@@ -15,7 +15,7 @@
 
     public class MonitoringModel
     {
-        private const string INVALID_FILENAME_PART = "BAK";
+        private static readonly string[] invalidFileParts = { "BAK", "BACK" };
 
         private readonly FileSystemWatcher watcher;
 
@@ -231,7 +231,7 @@
 
         private async void OnSavefileWatcherEvent(object sender, FileSystemEventArgs e)
         {
-            if(e.ChangeType == WatcherChangeTypes.Deleted || e.FullPath.Contains(INVALID_FILENAME_PART))
+            if (e.ChangeType == WatcherChangeTypes.Deleted || IsFileInvalid(e.FullPath))
             {
                 return;
             }
@@ -254,7 +254,7 @@
         private void UpdateSavegameData()
         {
             var savegames = from file in Directory.EnumerateFiles(settings.SavegameFolder, "*.sav")
-                            where !file.Contains(INVALID_FILENAME_PART)
+                            where !IsFileInvalid(file)
                             select SavegameHeader.Read(file) into header
                             group header by header.SessionName into session
                             select session.OrderByDescending(sh => sh.SaveDate).First();
@@ -313,6 +313,22 @@
             }
             catch (Exception) { } //TODO handle exceptions
 
+        }
+
+        private bool IsFileInvalid(string file)
+        {
+            if (file == null || file == string.Empty)
+            { return true; }
+
+            foreach (var invalidPart in invalidFileParts)
+            {
+                if (file.Contains(invalidPart))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public event EventHandler OnConnected;
